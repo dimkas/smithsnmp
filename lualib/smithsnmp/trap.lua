@@ -142,8 +142,11 @@ local trap_handler = function()
                     if send == false then
                         core.trap_varbind(oid1, tag1, value1)
                         core.trap_varbind(oid2, tag2, value2)
+                        print('var bindoid1',oid1, tag1, value1)
+                        print('var bindoid2',oid2, tag2, value2)
                     end
                     core.trap_varbind(oid, tag, value)
+                    print('var bind',oid2, tag2, value2)
                     send = true
                 end
             end
@@ -155,6 +158,7 @@ local trap_handler = function()
             local version = 2
             -- Send Trap
             core.trap_send(version, host.community, host.ip, host.port)
+            print('send trap',host.community, host.ip, host.port)
         end
     end
 end

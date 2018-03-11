@@ -95,6 +95,7 @@ end
 local __load_config = function()
     tcp_scalar_cache = {}
     tcp_conn_entry_cache = {}
+    if OS=='MAC64' then return end
     for line in io.lines("/proc/net/snmp") do
         if string.match(line, "%w+") == 'Tcp' then
             for w in string.gmatch(line, "%d+") do

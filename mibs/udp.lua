@@ -87,6 +87,7 @@ end
 local __load_config = function()
     udp_scalar_cache = {}
     udp_entry_cache = {}
+    if OS=='MAC64' then return end
     for line in io.lines("/proc/net/snmp") do
         if string.match(line, "%w+") == 'Udp' then
             for w in string.gmatch(line, "%d+") do

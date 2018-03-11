@@ -67,6 +67,13 @@ For luarocks build, type:
 
     sudo luarocks build smithsnmp-scm-1.rockspec
 
+## MacOSx
+
+### Build
+  scons --with-agentx --without-crypto --without-sha --without-aes --evloop=select --with-cflags=-DOS_MACOSX=1
+### Install
+  mv build/smithsnmp/core.dylib build/smithsnmp/core.so
+  
 ## Test
 
 There are three test modes.
@@ -122,7 +129,7 @@ default port 162:
 Now enable the trap feature when SmithSNMP is running as an agent on the
 default port 161):
 
-    snmpset -v2c -cprivate localhost .1.3.6.1.6.3.1.1.4.42.0 t 100
+    ./tests/net-snmp-release/bin/snmpset -v2c -cprivate localhost .1.3.6.1.6.3.1.1.4.42.0 t 100
 
 And you can disable the trap feature any time as you like:
 

@@ -24,6 +24,7 @@ local icmp_scalar_cache = {}
 
 local __load_config = function()
     icmp_scalar_cache = {}
+    if OS=='MAC64' then return end
     for line in io.lines("/proc/net/snmp") do
         if string.match(line, "%w+") == 'Icmp' then
             for w in string.gmatch(line, "%d+") do
