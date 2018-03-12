@@ -6,7 +6,7 @@
 # Include path where lua.h, luaconf.h and lauxlib.h reside:
 LUAVER=5.1.4
 
-INCLUDES= -I/workspace/zdc/external/lua-$(LUAVER)/src -I/usr/local/include -I/opt/local/include
+INCLUDES= -I/workspace/zdc/external/lua-$(LUAVER)/src -I/usr/local/include -I/opt/local/include -I../core
 
 # Use this if you need to compile for an old ARM ABI with swapped FPA doubles
 #DEFINES= -DSWAPPED_DOUBLE
@@ -23,7 +23,7 @@ INSTALL= install -p
 INSTALLPATH= $(LUA) installpath.lua
 
 MODNAME= snmpcodec
-MODOTHER=../core/snmpcodec.o ../core/snmp_decoder.o ../core/snmp_encoder.o ../core/mib_tree.o
+MODOTHER=../core/snmp_decoder.o ../core/snmp_encoder.o ../core/mib_tree.o
 MODSO= $(MODNAME).so
 
 all: $(MODSO)
@@ -32,8 +32,8 @@ all: $(MODSO)
 macosx:
 	$(MAKE) all "SOCC=MACOSX_DEPLOYMENT_TARGET=10.3 $(CC) -dynamiclib -single_module -undefined dynamic_lookup $(SOCFLAGS)"
 
-$(MODSO): $(MODOTHER)
-	$(SOCC) -o $@ $(MODOTHER)
+$(MODSO): $(MODNAME).o $(MODOTHER)
+	$(SOCC) -o $@ $< $(MODOTHER)
 
 install: $(MODSO)
 	#$(INSTALL) $< `$(INSTALLPATH) $(MODNAME)`
@@ -42,7 +42,7 @@ test: $(MODSO)
 	#@$(LUA) md5test.lua && echo "MD5 test OK"
 
 clean:
-	$(RM) *.o *.so *.obj *.lib *.exp *.dll *.manifest
+	$(RM) *.o *.so *.obj *.lib *.exp *.dll *.manifest ../core/*.o ../core/*.obj ../core/*.lib
 
 .PHONY: all macosx install test clean
 
