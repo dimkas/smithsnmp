@@ -26,6 +26,10 @@
 #include "list.h"
 #include "utils.h"
 
+#if defined(SNMP_BIG_ENDIAN )
+ #undef LITTLE_ENDIAN
+#endif
+
 /* AgentX PDU flags */
 #define INSTANCE_REGISTRATION  0x1
 #define NEW_INDEX              0x2

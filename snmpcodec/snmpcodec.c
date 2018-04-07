@@ -62,37 +62,46 @@ snmp_trap_encode(struct trap_datagram *tdg)
   /* varbind list len */
   len_len = ber_length_enc_try(tdg->vb_list_len);
   trap_hdr->pdu_len += tag_len + len_len + tdg->vb_list_len;
+  printf("vb_list_len=%d pdu_len=%d len_len=%d\n", tdg->vb_list_len,trap_hdr->pdu_len, len_len);
 
   /* request id len */
   len_len = ber_length_enc_try(pdu_hdr->req_id_len);
   trap_hdr->pdu_len += tag_len + len_len + pdu_hdr->req_id_len;
+  printf("req_id_len=%d pdu_len=%d len_len=%d\n", pdu_hdr->req_id_len,trap_hdr->pdu_len, len_len);
 
   /* error status len */
   len_len = ber_length_enc_try(pdu_hdr->err_stat_len);
   trap_hdr->pdu_len += tag_len + len_len + pdu_hdr->err_stat_len;
+  printf("err_stat_len=%d pdu_len=%d len_len=%d %d\n", pdu_hdr->err_stat_len,trap_hdr->pdu_len, len_len,pdu_hdr->err_stat_len);
 
   /* error index len */
   len_len = ber_length_enc_try(pdu_hdr->err_idx_len);
   trap_hdr->pdu_len += tag_len + len_len + pdu_hdr->err_idx_len;
+  printf("err_idx_len=%d pdu_len=%d len_len=%d\n", pdu_hdr->err_idx_len,trap_hdr->pdu_len, len_len);
 
   /* PDU len */
   len_len = ber_length_enc_try(trap_hdr->pdu_len);
   tdg->data_len += tag_len + len_len + trap_hdr->pdu_len;
+  printf("pdu_len=%d pdu_len=%d len_len=%d\n", tdg->data_len,trap_hdr->pdu_len, len_len);
 
   /* community len */
   len_len = ber_length_enc_try(tdg->comm_len);
   tdg->data_len += tag_len + len_len + tdg->comm_len;
+  printf("comm_len=%d pdu_len=%d len_len=%d\n", tdg->data_len,tdg->comm_len, len_len);
 
   /* version len */
   len_len = ber_length_enc_try(tdg->ver_len);
   tdg->data_len += tag_len + len_len + tdg->ver_len;
+  printf("ver_len=%d pdu_len=%d len_len=%d\n", tdg->data_len,tdg->ver_len, len_len);
 
   /* send buffer len */
   len_len = ber_length_enc_try(tdg->data_len);
   tdg->send_len += tag_len + len_len + tdg->data_len;
+  printf("data_len=%d pdu_len=%d len_len=%d\n", tdg->data_len,tdg->data_len, len_len);
 
   /* allocate trap buffer */
   tdg->send_buf = xmalloc(tdg->send_len);
+  printf("send len %d\n", tdg->send_len);
   buf = tdg->send_buf;
 
   /* sequence tag */
@@ -282,9 +291,10 @@ snmp_trap_getbuffer(lua_State *L)
   pdu_hdr->req_id = random();
   pdu_hdr->req_id_len = ber_value_enc_try(&pdu_hdr->req_id, 1, ASN1_TAG_INT);
   pdu_hdr->err_stat = 0;
-  pdu_hdr->err_stat_len = ber_value_enc_try(&pdu_hdr->err_stat_len, 1, ASN1_TAG_INT);
+  pdu_hdr->err_stat_len = ber_value_enc_try(&pdu_hdr->err_stat, 1, ASN1_TAG_INT);
+  printf("getbuf err_stat_len %d\n",pdu_hdr->err_stat_len);
   pdu_hdr->err_idx = 0;
-  pdu_hdr->err_idx_len = ber_value_enc_try(&pdu_hdr->err_idx_len, 1, ASN1_TAG_INT);
+  pdu_hdr->err_idx_len = ber_value_enc_try(&pdu_hdr->err_idx, 1, ASN1_TAG_INT);
   switch (version) {
   case TRAP_V1:
     trap_hdr->pdu_type = SNMP_TRAP_V1;
@@ -294,7 +304,7 @@ snmp_trap_getbuffer(lua_State *L)
     break;
   default:
     break;
-  }
+  } 
 
   /* Encode SNMP trap datagram */
   snmp_trap_encode(tdg);

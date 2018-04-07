@@ -30,6 +30,9 @@
 #include "trap.h"
 #endif
 #include "utils.h"
+#if defined(SNMP_BIG_ENDIAN )
+ #undef LITTLE_ENDIAN
+#endif
 
 struct protocol_operation *smithsnmp_prot_ops;
 struct trap_operation *smithsnmp_trap_ops;

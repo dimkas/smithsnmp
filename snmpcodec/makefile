@@ -2,6 +2,7 @@
 # To compile with MSVC please run: msvcbuild.bat
 # To compile with MinGW please run: mingw32-make -f Makefile.mingw
 # To compile with lua52: run: make LUAVER=5.2.4 macosx
+# To compile with P1010: make CC=powerpc-fsl-linux-gnuspe-gcc DEFINES=-DSNMP_BIG_ENDIAN=1
 
 # Include path where lua.h, luaconf.h and lauxlib.h reside:
 LUAVER=5.1.4

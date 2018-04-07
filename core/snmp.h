@@ -26,6 +26,10 @@
 #include "list.h"
 #include "utils.h"
 
+#if defined(SNMP_BIG_ENDIAN )
+ #undef LITTLE_ENDIAN
+#endif
+
 #define MD5_HASHKEYLEN     64
 #define MD5_SECRETKEYLEN   16
 #define SHA1_HASHKEYLEN    64

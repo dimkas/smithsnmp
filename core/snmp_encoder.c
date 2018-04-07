@@ -25,6 +25,10 @@
 
 #include "asn1.h"
 
+#if defined(SNMP_BIG_ENDIAN )
+ #undef LITTLE_ENDIAN
+#endif
+
 /* Input:  integer value
  * Output: none
  * Return: byte length.
@@ -65,14 +69,14 @@ ber_int_enc_try(int value)
   i = 0;
 
   if (value >= 0) {
-    while (i < sizeof(int) && !a.buf[i]) {
+    while (i < sizeof(int)-1 && !a.buf[i]) {
       i++;
     }
     if (a.buf[i] & 0x80) {
       len += 1;
     }
   } else {
-    while (i < sizeof(int) && a.buf[i] == 0xff) {
+    while (i < sizeof(int)-1 && a.buf[i] == 0xff) {
       i++;
     }
     if (!(a.buf[i] & 0x80)) {
