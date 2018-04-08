@@ -128,6 +128,6 @@ local sysGroup = {
 }
 
 -- Register sysUpTime as a default SNMP trap varbind.
--- trap.object_register("1.3.6.1.2.1.1.3.0", sysGroup[sysUpTime], function() return true end)
+trap.object_register("1.3.6.1.2.1.1.3.0", sysGroup[sysUpTime], function() return true end)
 
 return sysGroup

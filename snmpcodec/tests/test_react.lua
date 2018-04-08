@@ -36,7 +36,9 @@ snmpcodec=require "snmpcodec"
 udp=socket.udp()
 assert(udp:setsockname('*',161))
 while true do
- buf=udp:receive()
+ buf,host,port=udp:receivefrom()
  print('receive',#buf)
- snmpcodec.snmp_receive(buf)
+ sendbuf=snmpcodec.snmp_receive(buf)
+ print('sendbuf',#sendbuf,host,port)
+ udp:sendto(sendbuf,host,port)
 end

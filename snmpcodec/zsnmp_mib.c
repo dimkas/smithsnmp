@@ -42,7 +42,7 @@ smithsnmp_mib_node_reg(lua_State *L)
     lua_pushstring(L, "MIB handler is not a function!");
     lua_error(L);
   }
-  grp_cb = luaL_ref(L, LUA_ENVIRONINDEX);
+  grp_cb = luaL_ref(L, LUA_REGISTRYINDEX);
 
   /* Register group node */
   i = mib_node_reg(grp_id, grp_id_len, grp_cb);
@@ -205,7 +205,7 @@ int snmpcodec_init(lua_State *L)
   /* Init mib tree */
   INIT_LIST_HEAD(&snmp_datagram.vb_in_list);
   INIT_LIST_HEAD(&snmp_datagram.vb_out_list);
-
+  snmp_datagram.send_len = 0;
   mib_init(L);
   return 0;  
 }
@@ -213,6 +213,32 @@ int snmpcodec_init(lua_State *L)
 static void
 snmpcodec_send(uint8_t *buf, int len)
 {
+}
+
+int 
+snmp_receive(lua_State *L)
+{
+  size_t len;
+  const char* buf = luaL_checklstring(L, 1, &len);
+  if (snmp_datagram.send_len != 0)
+  {
+    free(snmp_datagram.send_buf); 
+    snmp_datagram.send_buf = NULL;
+    snmp_datagram.send_len = 0;
+  }
+  snmp_recv((uint8_t*)buf, len);
+  if (snmp_datagram.send_len != 0)
+  {
+    lua_pushlstring(L, snmp_datagram.send_buf, snmp_datagram.send_len);
+    free(snmp_datagram.send_buf); 
+    snmp_datagram.send_buf = NULL;
+    snmp_datagram.send_len = 0;
+  }
+  else
+  {
+    lua_pushnil(L);
+  }
+  return 1;
 }
 
 struct protocol_operation snmp_prot_ops = {

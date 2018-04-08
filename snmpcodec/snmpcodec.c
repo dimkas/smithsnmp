@@ -17,15 +17,7 @@ int snmp_trap_varbind(lua_State *L);
 int snmp_trap_getbuffer(lua_State *L);
 
 int snmpcodec_init(lua_State *L);
-
-int 
-snmp_receive(lua_State *L)
-{
-  size_t len;
-  const char* buf = luaL_checklstring(L, 1, &len);
-  snmp_recv((uint8_t*)buf, len);
-  return 0;
-}
+int snmp_receive(lua_State *L);
 
 static const luaL_Reg R[] =
 {
