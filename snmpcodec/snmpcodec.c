@@ -2,6 +2,7 @@
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
+#include "snmp.h"
 
 int smithsnmp_mib_node_reg(lua_State *L);
 int smithsnmp_mib_node_unreg(lua_State *L);
@@ -22,7 +23,7 @@ snmp_receive(lua_State *L)
 {
   size_t len;
   const char* buf = luaL_checklstring(L, 1, &len);
-  snmp_recv(buf, len);
+  snmp_recv((uint8_t*)buf, len);
   return 0;
 }
 

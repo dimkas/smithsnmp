@@ -15,19 +15,10 @@ config={
    { user = 'rwAuthPrivUser', auth_mode = "md5", auth_phrase = "rwAuthPrivUser", encrypt_mode = "aes", encrypt_phrase = "rwAuthPrivUser", views = { ["."] = 'rw' } },
  },
 
- mib_module_path = '../mibs',
+ mib_module_path = 'mibs',
 
  mib_modules = {
  ["1.3.6.1.2.1.1"] = 'system',
- ["1.3.6.1.2.1.2"] = 'interfaces',
- --    ["1.3.6.1.2.1.4"] = 'ip',
- --    ["1.3.6.1.2.1.6"] = 'tcp',
- --    ["1.3.6.1.2.1.7"] = 'udp',
- ["1.3.6.1.4.1.8888.1"] = 'two_cascaded_index_table',
- ["1.3.6.1.4.1.8888.2"] = 'three_cascaded_index_table',
- ["1.3.6.1.1"] = 'dummy',
- --    ["1.3.6.1.2.1.5"] = 'icmp',
- ["1.3.6.1.6.3.1.1.4"] = 'snmptrap',
  },
 }
 
@@ -41,10 +32,11 @@ package.cpath=ZDC_DIR..'lib/mac64/?.so;'..APP_DIR..'../build/mac64/?.so;'..packa
 package.path=ZDC_DIR..'lua/?.lua;'..ZDC_DIR..'lib/lua/?.lua;'..package.path
 
 socket=require'socket'
+snmpcodec=require "snmpcodec"
 udp=socket.udp()
 assert(udp:setsockname('*',161))
 while true do
  buf=udp:receive()
  print('receive',#buf)
- zsnmpd.snmp_receive(buf)
+ snmpcodec.snmp_receive(buf)
 end

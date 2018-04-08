@@ -576,9 +576,11 @@ snmp_decode(struct snmp_datagram *sdg)
   }
 
 DECODE_FINISH:
+#ifndef SNMPCODEC
   /* We should free received buffer here */
   free(snmp_datagram.recv_buf);
-
+#endif
+  
   /* If fail, do some clear things */
   if (dec_fail) {
     snmp_datagram_clear(sdg);
