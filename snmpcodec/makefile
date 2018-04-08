@@ -18,13 +18,13 @@ LUA= lua
 CC= gcc
 SOCFLAGS= -fPIC -lz
 SOCC= $(CC) -shared $(SOCFLAGS)
-CFLAGS= -Wall -O2 -fomit-frame-pointer $(SOCFLAGS) $(DEFINES) $(INCLUDES)
+CFLAGS= -Wall -O2 -fomit-frame-pointer $(SOCFLAGS) $(DEFINES) $(INCLUDES) -DDISABLE_CRYPTO -DDISABLE_SHA -DDISABLE_AES
 RM= rm -f
 INSTALL= install -p
 INSTALLPATH= $(LUA) installpath.lua
 
 MODNAME= snmpcodec
-MODOTHER=../core/snmp_decoder.o ../core/snmp_encoder.o ../core/mib_tree.o
+MODOTHER=../core/snmp_decoder.o ../core/snmp_encoder.o ../core/mib_tree.o ../core/mib_view.o ../core/snmp_msg_in.o ../core/snmp_msg_out.o ../core/snmp_msg_proc.o zsnmp_mib.o zsnmp_trap.o
 MODSO= $(MODNAME).so
 
 all: $(MODSO)
