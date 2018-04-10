@@ -181,7 +181,6 @@ mib_instance_search(struct oid_search_res *ret_oid)
 
   ret_oid->err_stat = lua_tointeger(L, -4);
   tag(var) = lua_tonumber(L, -1);
-  printf("mib search return %d %d\n", ret_oid->err_stat, tag(var));
 
   if (!ret_oid->err_stat && ASN1_TAG_VALID(tag(var))) {
     /* Return value */
