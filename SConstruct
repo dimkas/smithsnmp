@@ -197,7 +197,7 @@ else:
 conf = Configure(env, custom_tests = {'CheckEpoll' : CheckEpoll, 'CheckSelect' : CheckSelect, 'CheckKqueue' : CheckKqueue, 'CheckEndian' : CheckEndian})
 
 # endian check
-endian = conf.CheckEndian()
+endian = 'Big'
 if endian == 'Big':
   env.Append(CPPDEFINES = ["BIG_ENDIAN"])
 elif endian == 'Little':
