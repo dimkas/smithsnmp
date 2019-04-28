@@ -52,6 +52,7 @@ local ip_NetToMedia_cache = {
 
 local __load_config = function()
     ip_scalar_cache = {}
+    if OS=='MAC64' then return end
     for line in io.lines("/proc/net/snmp") do
         if string.match(line, "%w+") == 'Ip' then
             for w in string.gmatch(line, "%d+") do

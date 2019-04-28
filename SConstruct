@@ -153,6 +153,7 @@ env = Environment(
   ENV = os.environ,
   LIBS = ['m', 'dl'],
   CCFLAGS = ['-std=c99', '-O2', '-Wall'],
+  LINKFLAGS = ['-single_module', '-undefined', 'dynamic_lookup', '-fPIC'],
   CPPDEFINES = {'_XOPEN_SOURCE' : '600'},
 )
 
@@ -182,6 +183,7 @@ if GetOption("libs") != "":
 if GetOption("liblua_dir") != "":
   env.Append(LIBPATH = [GetOption("liblua_dir")])
 
+a = GetOption("evloop")
 # event loop check
 if GetOption("evloop") == 'epoll':
   env.Append(CPPDEFINES = ["USE_EPOLL"])
@@ -190,7 +192,7 @@ elif GetOption("evloop") == 'kqueue':
 elif GetOption("evloop") == 'select' or GetOption("evloop") == '':
   pass
 else:
-  print "Error: Unknown event loop model"
+  print ("Error: Unknown event loop model")
   Exit(1)
 
 # autoconf
@@ -208,25 +210,25 @@ else:
 # event loop check
 if GetOption("evloop") == 'epoll':
   if not conf.CheckEpoll():
-    print "Error: epoll failed"
+    print ("Error: epoll failed")
     Exit(1)
 elif GetOption("evloop") == 'kqueue':
   if not conf.CheckKqueue():
-    print "Error: Kqueue failed"
+    print("Error: Kqueue failed")
     Exit(1)
 elif GetOption("evloop") == 'select' or GetOption("evloop") == '':
   if not conf.CheckSelect():
-    print "Error: select failed"
+    print("Error: select failed")
     Exit(1)
 else:
-  print "Error: Not the right event driving type"
+  print("Error: Not the right event driving type")
   Exit(1)
 
 # CCFLAGS
 
 # find liblua. On Ubuntu, liblua is named liblua5.1, so we need to check this.
 if not conf.CheckLib('lua') and not conf.CheckLib('lua5.1'):
-  print "Error: liblua or liblua5.1 not found!"
+  print("Error: liblua or liblua5.1 not found!")
   Exit(1)
 
 # find lua header files
@@ -235,7 +237,7 @@ if conf.CheckCHeader('lua.h'):
 elif conf.CheckCHeader('lua5.1/lua.h'):
   env.Append(CCFLAGS = ['-I/usr/include/lua5.1'])
 else:
-  print "Error: lua.h not found"
+  print("Error: lua.h not found")
   Exit(1)
 
 env = conf.Finish()

@@ -24,6 +24,46 @@ local utils = require "smithsnmp.utils"
 -- default configuration file
 local config_file = 'config/snmp.conf'
 
+if not OS then
+        if os.getenv("WINDIR") then
+                OS='WIN32'
+        else
+                local uname=io.popen("uname -smp")
+                if uname then
+                        local u=uname:read() or ''
+                        uname:close()
+                        local s,m,p=string.match(u,"^(%S+)%s(%S+)%s(%S+)")
+                        if s=='Darwin' then
+                                if m=='x86_64' then
+                                        OS='MAC64'
+                                else
+                                        OS='MAC'
+                                end
+                        elseif s=='Linux' then
+                                LINUXARCH=''
+                                if m=='x86_64' then
+                                        OS='LINUX64'
+                                        LINUXARCH='centos64'
+                                elseif m=='armv6l' then
+                                        OS='LINUX'
+                                        LINUXARCH='armv6l'
+                                elseif m=='armv5tejl' then
+                                        OS='LINUX'
+                                        LINUXARCH='armv5tejl'
+                                else
+                                        OS='LINUX'
+                                        LINUXARCH='centos32'
+                                end
+                        else
+                                print(s,m,p)
+                                error'unknow OS'
+                        end
+                else
+                        error'unknow OS'
+                end
+        end
+end
+
 -------------------------------------------------------------------------------
 -- parse arguments
 -------------------------------------------------------------------------------

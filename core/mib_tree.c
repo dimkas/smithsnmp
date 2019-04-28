@@ -122,7 +122,7 @@ mib_instance_search(struct oid_search_res *ret_oid)
   /* Empty lua stack. */
   lua_pop(L, -1);
   /* Get function. */
-  lua_rawgeti(L, LUA_ENVIRONINDEX, ret_oid->callback);
+  lua_rawgeti(L, LUA_REGISTRYINDEX, ret_oid->callback);
   /* op */
   lua_pushinteger(L, ret_oid->request);
   /* req_sub_oid */
@@ -610,7 +610,7 @@ mib_instance_node_delete(struct mib_instance_node *in)
   if (in != NULL) {
     /* Unrefer mib search handler */
     lua_State *L = mib_lua_state;
-    luaL_unref(L, LUA_ENVIRONINDEX, in->callback);
+    luaL_unref(L, LUA_REGISTRYINDEX, in->callback);
     free(in);
   }
 }

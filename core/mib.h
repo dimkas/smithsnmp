@@ -28,6 +28,10 @@
 #include "lualib.h"
 #include "lauxlib.h"
 
+#if defined(SNMP_BIG_ENDIAN )
+ #undef LITTLE_ENDIAN
+#endif
+
 #define MIB_OBJ_UNKNOWN         0
 #define MIB_OBJ_GROUP           1
 #define MIB_OBJ_INSTANCE        2

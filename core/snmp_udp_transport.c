@@ -20,7 +20,10 @@
  */
 
 #include <sys/socket.h>
-#include <sys/signalfd.h>
+#ifndef OS_MACOSX
+  #include <sys/signalfd.h>
+#endif
+
 #include <netinet/in.h>
 
 #include <unistd.h>
@@ -45,6 +48,7 @@ struct snmp_data_entry {
 static struct snmp_data_entry snmp_entry;
 static void transport_close(void);
 
+#ifndef OS_MACOSX
 static void
 snmp_signal_handler(int sigfd, unsigned char flag, void *ud)
 {
@@ -56,6 +60,7 @@ snmp_signal_handler(int sigfd, unsigned char flag, void *ud)
     transport_close();
   }
 }
+#endif
 
 static void
 snmp_write_handler(int sock, unsigned char flag, void *ud)
@@ -105,7 +110,9 @@ transport_running(void)
 {
   snmp_event_init();
   snmp_event_add(snmp_entry.sock, SNMP_EV_READ, snmp_read_handler, NULL);
+#ifndef OS_MACOSX
   snmp_event_add(snmp_entry.sigfd, SNMP_EV_READ, snmp_signal_handler, NULL);
+#endif
   snmp_event_run();
 }
 
@@ -116,7 +123,10 @@ transport_step(long timeout)
   if (inited == 0) {
     snmp_event_init();
     snmp_event_add(snmp_entry.sock, SNMP_EV_READ, snmp_read_handler, NULL);
+#ifndef OS_MACOSX
     snmp_event_add(snmp_entry.sigfd, SNMP_EV_READ, snmp_signal_handler, NULL);
+#endif
+
     inited = 1;
   }
   return snmp_event_step(timeout);
@@ -141,12 +151,13 @@ transport_init(int port)
   sigaddset(&mask, SIGINT);
   sigprocmask(SIG_BLOCK, &mask, NULL);
 
+#ifndef OS_MACOSX
   snmp_entry.sigfd = signalfd(-1, &mask, 0);
   if (snmp_entry.sigfd < 0) {
     perror("usignal");
     return -1;
   }
-
+#endif
   /* SNMP socket */
   snmp_entry.sock = socket(AF_INET, SOCK_DGRAM, 0);
   if (snmp_entry.sock < 0) {
